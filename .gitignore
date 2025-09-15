@@ -14,3 +14,7 @@ wheels/
 /docs
 /reveal
 /logs
+**/.ipynb*
+.mypy*
+**/.vscode/
+.ruff*

@@ -3,7 +3,7 @@ from loguru import logger
 import akshare as ak
 import pandas as pd
 from typing import TypedDict, Any, NotRequired
-from slide_template import SlideTemplate
+from myslide.slide_template import SlideTemplate
 
 
 class Slide(TypedDict):
@@ -11,6 +11,10 @@ class Slide(TypedDict):
     title: str
     content: Any
 
+DATA_URL = dict(
+    em_df = ak.stock_zh_a_spot_em,
+    sse_df = ak.stock_sse_summary
+)
 
 class StockDataProcessor:
     """处理股票数据并生成HTML报告的类 (遵循职责分离原则)"""
@@ -23,11 +27,12 @@ class StockDataProcessor:
         :param output_dir: 输出目录路径
         """
         self.output_dir = Path().parent / output_dir
-
-        self.output_dir.mkdir(parents=True, exist_ok=True)
-
         self.setup_logging()
-        logger.info(f"Output directory set to: {self.output_dir}")
+        logger.info(f"Output set to: {self.output_dir}")
+        logger.info(DATA_URL.get("sse_df"))
+
+        self.sse_df = self.fetch_data(DATA_URL.get("sse_df"))
+        self.em_df = self.fetch_data(DATA_URL.get("em_df"))
 
     def setup_logging(self):
         """配置日志记录"""
@@ -35,7 +40,7 @@ class StockDataProcessor:
         log_dir.mkdir(exist_ok=True)
         logger.add(log_dir / "stock_data_processor.log", rotation="1 MB", level="INFO")
 
-    def fetch_data(self) -> pd.DataFrame:
+    def fetch_data(self, data_url) -> pd.DataFrame:
         """
         获取股票数据，返回一个DataFrame对象。
 
@@ -43,7 +48,7 @@ class StockDataProcessor:
         """
         try:
             # 获取SSE数据
-            sse_df = ak.stock_sse_summary()
+            sse_df = data_url()
             logger.info(f"SSE data fetched successfully: {sse_df.shape}")
             return sse_df
         except Exception as e:
@@ -72,12 +77,12 @@ class StockDataProcessor:
         inject_data(
             title="上海证券交易所数据",
             content="""
-            Presented by Eric \n {curent_date}
+            Presented by Eric 
             """,
         )
 
         # 2. 处理SSE数据为表格格式 (排除首行和最后三行)
-        sse_df = self.fetch_data()
+        sse_df = self.sse_df.copy()
         table_data = sse_df.iloc[1:-3, :].set_index(sse_df.columns[0])
         table_html = table_data.to_html()
         inject_data(title="上海证券交易所数据", content=table_html)
