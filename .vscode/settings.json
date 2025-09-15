@@ -1,0 +1,8 @@
+{
+    "slidev.include": [
+        "**/slides.md",
+        "output.md"
+    ],
+    "slidev.port": 3031,
+    "livePreview.defaultPreviewPath": "/reveal/index.html"
+}
