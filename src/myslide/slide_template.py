@@ -9,6 +9,11 @@ class SlideTemplate:
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.8.0.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.8.0.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.8.0.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.8.0.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.8.0.min.js"></script>
 
 		<title>reveal.js</title>
 
@@ -63,6 +68,21 @@ class SlideTemplate:
   </p>
 </section>
         """,
+        img="""
+<section>
+  <h3>{{title | default('title')}}</h3>
+  <img class="r-stretch" src="{{content | default('img.png')}}" alt="">
+</section>
+        """,
+        bokeh_plot="""
+<section>
+  <h3>{{title | default('title')}}</h3>
+  {{content[0] | default('script')}}
+  <div style="display: flex; justify-content: center; height: 100vh;">
+  {{content[1] | default('div')}}
+  </div>
+</section>
+        """,
         cards="""
 <section>
   <h3>{{ title | default('Title') }}</h3>
@@ -97,9 +117,9 @@ class SlideTemplate:
         Returns:
             str: 渲染后的HTML字符串
         """
-        template_str = cls.TEMPLATES.get(slide_data["template"], 'content')
+        template_str = cls.TEMPLATES.get(slide_data["template"], "content")
 
-        slide_template = Template(template_str) # type: ignore
+        slide_template = Template(template_str)  # type: ignore
         html = slide_template.render(
             title=slide_data["title"], content=slide_data["content"]
         )
