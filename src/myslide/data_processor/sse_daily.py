@@ -4,7 +4,7 @@ from typing import TypedDict, Any
 from bokeh.plotting import figure
 from bokeh.io import export_png
 from loguru import logger
-from pathlib import Path
+from .base_process import BaseDataProcessor
 
 
 class Slide(TypedDict, total=False):
@@ -13,25 +13,7 @@ class Slide(TypedDict, total=False):
     content: Any
 
 
-class DataProcessor:
-    """处理股票数据并生成slide 数据"""
-
-    def __init__(
-        self,
-        df_data: pd.DataFrame,
-        output_src: Path,
-        cover_title: str = "股市数据大屏展示",
-    ):
-        """
-        :param df_data: 股票数据DataFrame
-        """
-        self.df = df_data
-        self.cover_title = cover_title
-        self.output_src = output_src
-
-        logger.debug(f"Output src: {self.output_src}")
-        self.slide_datas: list[Slide] = []
-
+class SseDaily(BaseDataProcessor):
     def tidy_data(self) -> pd.DataFrame:
         """
         数据处理阶段：数据清洗、转换、处理。
@@ -48,44 +30,14 @@ class DataProcessor:
 
         return df
 
-    def inject_data(
-        self,
-        title: str,
-        content: Any,
-        template: str = "content",
-    ):
-        self.slide_datas.append(dict(title=title, content=content, template=template))
-
-    def add_cover_end(self):
-        """
-        添加封面和尾页。
-
-        :return: None
-        """
-        cover = dict(
-            title=self.cover_title, content="Present by Eric", template="cover"
-        )
-        self.slide_datas.insert(0, cover)
-        self.inject_data(
-            title="Thank You", content="waterchinap@qq.com", template="cover"
-        )
-
-    def data_process(self) -> list[Slide]:
+    def data_process(self, clean_data) -> list[Slide]:
         """
         数据处理阶段：获取并处理数据，返回一个列表.
 
         :return: 列表
         """
-        df = self.tidy_data()
+        df = clean_data
         logger.debug(f"Data shape: {df}")
-
-        # cover data
-        self.inject_data(
-            title="上海证券交易所数据",
-            content="""
-            Presented by Eric 
-            """,
-        )
 
         # 2. 处理SSE数据为表格格式 (排除首行和最后三行)
         table_data = df
@@ -122,14 +74,15 @@ class DataProcessor:
             self.inject_data(label, content, "img")
 
     def run(self):
-        self.data_process()
+        clean_data = self.tidy_data()
+        self.data_process(clean_data)
         self.add_cover_end()
         return self.slide_datas
 
 
 def main():
     """主函数"""
-    data = DataProcessor(df_data=ak.stock_sse_summary())
+    data = SseDaily(df_data=ak.stock_sse_summary())
     return data.run()
 
 

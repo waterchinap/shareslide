@@ -6,11 +6,7 @@ from myslide.slide_template import SlideTemplate
 class SlideRender:
     """处理股票数据并生成HTML报告的类 (遵循职责分离原则)"""
 
-    def __init__(
-        self,
-        slide_string: list[str],
-        output_file: Path
-    ):
+    def __init__(self, slide_string: list[str], output_file: Path):
         """
         :param output_dir: 输出目录路径
         """
@@ -43,12 +39,11 @@ class SlideRender:
         :param content: 要写入的字符串内容
         :param filename: 输出文件名
         """
-        output_file = self.output_file
 
         try:
-            with open(output_file, "w", encoding="utf-8") as f:
+            with open(self.output_file, "w", encoding="utf-8") as f:
                 f.write(content)
-            logger.info(f"HTML file successfully generated: {output_file}")
+            logger.info(f"HTML file successfully generated: {self.output_file}")
         except IOError as e:
             logger.error(f"Failed to write output file: {e}")
             raise

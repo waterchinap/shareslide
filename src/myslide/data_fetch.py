@@ -6,9 +6,8 @@ import pandas as pd
 class DataFetcher:
     """fetch data"""
 
-    DATA_URL = dict(
-    ashare_daily=ak.stock_zh_a_spot_em, sse_daily=ak.stock_sse_summary)
-    
+    DATA_URL = dict(ashare_daily=ak.stock_zh_a_spot_em, sse_daily=ak.stock_sse_summary)
+
     @classmethod
     def fetch_data(cls) -> (str, pd.DataFrame):
         """
@@ -24,7 +23,7 @@ class DataFetcher:
 
         if choice >= len(page_list):
             raise ValueError("Invalid choice")
-            
+
         data_key = page_list[choice]
 
         try:
@@ -33,6 +32,7 @@ class DataFetcher:
             return (data_key, df)
         except Exception as e:
             logger.error(f"Failed to fetch data: {e}")
+
 
 def main():
     """主函数"""
