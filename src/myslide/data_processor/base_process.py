@@ -33,6 +33,12 @@ class BaseDataProcessor(ABC):
         slide: Slide = {"title": title, "content": content, "template": template}
         self.slide_datas.append(slide)
 
+    def inject_dcards(self, content: Any, template: str = "dcards") -> None:
+        """注入幻灯片数据（通用实现）"""
+        slide: Slide = {"content": content, "template": template}
+        logger.debug(slide)
+        self.slide_datas.append(slide)
+
     def add_cover_end(self) -> None:
         """添加封面和尾页（通用实现）"""
         cover: Slide = {

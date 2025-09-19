@@ -4,13 +4,7 @@ from typing import TypedDict, Any
 from bokeh.plotting import figure
 from bokeh.io import export_png
 from loguru import logger
-from .base_process import BaseDataProcessor
-
-
-class Slide(TypedDict, total=False):
-    template: str
-    title: str
-    content: Any
+from .base_process import BaseDataProcessor, Slide
 
 
 class SseDaily(BaseDataProcessor):

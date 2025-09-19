@@ -6,6 +6,10 @@ from loguru import logger
 import sys
 import importlib
 import warnings
+from datetime import datetime
+
+
+today = datetime.now().strftime("%Y-%m-%d")
 
 
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -39,7 +43,8 @@ def get_processor(choice: str) -> DataProcessor:
 def main():
     """主函数"""
 
-    
+    cache_dir = Path(__file__).parent.parent.parent / "cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
 
     output_dir = Path(__file__).parent.parent.parent / "reveal"
 
