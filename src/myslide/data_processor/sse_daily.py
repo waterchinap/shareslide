@@ -1,6 +1,5 @@
 import akshare as ak
 import pandas as pd
-from typing import TypedDict, Any
 from bokeh.plotting import figure
 from bokeh.io import export_png
 from loguru import logger

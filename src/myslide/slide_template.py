@@ -1,5 +1,4 @@
 from jinja2 import Template
-from loguru import logger
 
 
 class SlideTemplate:
@@ -132,10 +131,8 @@ class SlideTemplate:
         """
         template_str = cls.TEMPLATES.get(slide_data["template"], "content")
         slide_template = Template(template_str)  # type: ignore
-        title=slide_data.get('title', "")
         html = slide_template.render(
-            title=slide_data.get("title", ''),
-            content=slide_data["content"]
+            title=slide_data.get("title", ""), content=slide_data["content"]
         )
 
         return html

@@ -7,7 +7,6 @@ from pathlib import Path
 today = datetime.now().strftime("%Y-%m-%d")
 
 
-
 class DataFetcher:
     """fetch data"""
 
@@ -21,7 +20,6 @@ class DataFetcher:
         :return: 股票数据DataFrame
         """
         cache_dir = Path("cache")
-
 
         page_list = list(cls.DATA_URL.keys())
         for i, page in enumerate(page_list):
