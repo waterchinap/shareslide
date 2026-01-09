@@ -5,6 +5,10 @@ from .base_process import BaseDataProcessor, Slide
 import numpy as np
 # from plotnine import *
 from plotnine import ggplot, aes, geom_text, theme_tufte, labs, theme, geom_point, element_text
+from plotnine.options import set_option
+
+set_option("figure_size", (16, 9))
+pd.options.mode.copy_on_write = True
 
 class AshareDaily(BaseDataProcessor):
     def tidy_data(self) -> pd.DataFrame:
@@ -160,7 +164,8 @@ class AshareDaily(BaseDataProcessor):
             labn: 显示的标签数量
             """
             cols = df.columns
-            lab_df = df.nlargest(labn, cols[1])
+            df['rank'] = df.iloc[:,0] - df.iloc[:,1]
+            lab_df = df.nlargest(labn, 'rank')
             p = (
                 ggplot(df, aes(cols[0], cols[1]))
                 + geom_point(color="#0394fc")
@@ -180,7 +185,7 @@ class AshareDaily(BaseDataProcessor):
             return (title, img_url)
 
         title, img = plot_points(
-            non_banks[["净利润", "总市值", "名称"]], title="市值利润对比"
+            non_banks[["mv_tier", "p_tier", "名称"]], title="市值利润对比"
         )
         # logger.debug(f"{title} ,{img}")
         self.inject_data(
@@ -188,6 +193,28 @@ class AshareDaily(BaseDataProcessor):
             content=img,
             template="img",
         )
+
+        def get_cornner(n:int, length:int = 100):
+            step = int(length / n)
+            bottom_x = [i for i in range(0, length, step)]
+            # bottom_xy = itertools.combinations(bottom_x, 2)
+            # right corners x alway > y
+            bottom_xy = [(i,j) for i in bottom_x for j in bottom_x if i > j]
+            # x, y plus step get the right top corner
+            block_xy = [(*i, i[0]+step, i[1]+step) for i in bottom_xy]
+            return block_xy
+
+        blocks = get_cornner(4)
+        sel = df[['mv_tier', 'p_tier', '名称']].copy()
+        for t in blocks:
+            block = sel.query(f'{t[0]}<mv_tier<{t[2]} and {t[1]}<p_tier<{t[3]}').copy()
+            title, img = plot_points(block, title=f"f{t[0]}-{t[1]}-{t[2]}-{t[3]}")
+            self.inject_data(
+            title=title,
+            content=img,
+            template="img",
+        )
+   
 
     def run(self):
         clean_data = self.tidy_data()
