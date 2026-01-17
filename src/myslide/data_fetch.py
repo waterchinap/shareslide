@@ -13,7 +13,7 @@ class DataFetcher:
     DATA_URL = dict(ashare_daily=ak.stock_zh_a_spot_em, sse_daily=ak.stock_sse_summary)
 
     @classmethod
-    def fetch_data(cls) -> (str, pd.DataFrame):
+    def fetch_data(cls) -> tuple[str, pd.DataFrame]:
         """
         获取股票数据，返回一个DataFrame对象。
 
@@ -39,19 +39,20 @@ class DataFetcher:
             return (data_key, df)
 
         try:
-            df = cls.DATA_URL.get(data_key)()
-            logger.info(f"SSE data fetched successfully: {df.shape}")
+            df = cls.DATA_URL[data_key]()
+            logger.info(f"{data_key} data fetched successfully: {df.shape}")
             cache_dir.mkdir(parents=True, exist_ok=True)
             df.to_csv(cache_file, index=False)
             return (data_key, df)
         except Exception as e:
             logger.error(f"Failed to fetch data: {e}")
+            raise
 
 
 def main():
     """主函数"""
     DataFetcher.fetch_data()
-
+    
 
 if __name__ == "__main__":
     main()

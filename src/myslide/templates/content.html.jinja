@@ -1,0 +1,11 @@
+{% set nrows = 8 %}
+{% for group in content|batch(nrows) %}
+<section>
+  <h3>{{title | default('title')}}</h3>
+  {% for item in group %}
+  <p>
+    {{ item | default('item')}}
+  </p>
+  {% endfor %}
+</section>
+{% endfor %}

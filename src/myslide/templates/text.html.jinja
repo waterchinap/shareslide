@@ -1,0 +1,10 @@
+{% for index, value in content.items() %}
+<section>
+  {% if title %}
+  <h3>{{title | default('title')}}</h3>
+  {% endif %}
+  <h3>
+    {{ value }}
+  </h3>
+</section>
+{% endfor %}

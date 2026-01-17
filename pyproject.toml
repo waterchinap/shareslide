@@ -16,6 +16,7 @@ dependencies = [
     "pandas>=2.3.2",
     "pandas-stubs>=2.3.2.250827",
     "plotnine[extra]>=0.15.0",
+    "pydantic>=2.12.5",
     "selenium>=4.35.0",
     "typer>=0.17.4",
 ]
@@ -27,3 +28,10 @@ default = true
 # 在 pyproject.toml 中
 [project.scripts]
 bigslide = "myslide.main:main"
+
+[tool.basedpyright]
+typeCheckingMode = "basic"
+reportUnknownMemberType = "none"
+reportAny = "none"
+reportUnusedCallResult = "none"
+reportImplicitStringConcatenation = "none"

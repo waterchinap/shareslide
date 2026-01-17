@@ -1,0 +1,7 @@
+{# 一张图片一页 #}
+{% for url in content %}
+<section>
+  <h3>{{title | default('title')}}</h3>
+  <img class="r-stretch" src="{{url | default('img.png')}}" alt="">
+</section>
+{% endfor %}

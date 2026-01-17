@@ -1,0 +1,3 @@
+[tool.jinja-lsp]
+templates = "./src/myslide/templates"
+backend = ["./src"]

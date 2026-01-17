@@ -1,0 +1,20 @@
+{% macro render_scard(content, title=None, ncards=4) %}
+{% set items = content.items()|list %}
+{% for group in items | batch(ncards) %}
+<section>
+{% if title %}
+  <h3>{{ title }}</h3>
+{% endif %}
+  <div class="slides-container">
+      {% for key, value in group %}
+      <div class="slide-card">
+        <h2>{{ key }}</h2>
+        <h3>{{ value }}</h3>
+      </div>
+      {% endfor %}
+  </div>
+</section>
+{% endfor %}
+{% endmacro %}
+
+{{ render_scard(content=content, title=title, ncards=4)}}

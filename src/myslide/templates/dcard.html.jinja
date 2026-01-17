@@ -1,0 +1,19 @@
+{% set ncards = 8 %}
+{% for group in content | batch(ncards) %}
+<section>
+  {# 卡片,接收一个字典，使用Flex布局实现横向居中且可折行排列 #}
+  <h3>{{ title if title else "" }}</h3>
+  <div class="slides-container">
+    {% if group is defined and group is not none %}
+      {% for key in group %}
+      <div class="slide-card">
+        <h3>{{ key }}</h3>
+        <h4>{{ content[key] }}</h4>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p>No data available</p>
+    {% endif %}
+  </div>
+</section>
+{% endfor %}
