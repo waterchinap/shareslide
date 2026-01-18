@@ -4,11 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.8.0.min.js"></script>
-  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.8.0.min.js"></script>
-  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.8.0.min.js"></script>
-  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.8.0.min.js"></script>
-  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.8.0.min.js"></script>
 
   <title>reveal.js</title>
 
@@ -108,20 +103,44 @@ table.dataframe tbody tr:hover {
   <script src="plugin/notes/notes.js"></script>
   <script src="plugin/markdown/markdown.js"></script>
   <script src="plugin/highlight/highlight.js"></script>
+  <script src="echarts.min.js"></script>
   <script>
-    // More info about initialization & config:
-    // - https://revealjs.com/initialization/
-    // - https://revealjs.com/config/
-    Reveal.initialize({
-      hash: true,
-      width: 1720,
-      height: 720,
-      autoSlide: 8000,
-      loop: true,
-      transition: 'fade',
+    window.chartOptions = {{ chart_options|safe }};
 
-      // Learn about plugins: https://revealjs.com/plugins/
-      plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    const chartInstances = {};
+
+    function initOrResizeChart(slide) {
+        const chartContainers = slide.querySelectorAll('.chart-container');
+        chartContainers.forEach(container => {
+            const chartId = container.id;
+            if (container.offsetWidth > 0) {
+                let chartInstance = chartInstances[chartId];
+                if (!chartInstance) {
+                    chartInstance = echarts.init(container);
+                    chartInstances[chartId] = chartInstance;
+                    if (window.chartOptions && window.chartOptions[chartId]) {
+                        chartInstance.setOption(window.chartOptions[chartId]);
+                    }
+                }
+                chartInstance.resize();
+            }
+        });
+    }
+
+    Reveal.initialize({
+        hash: true,
+        transition: 'slide',
+        loop: true,
+        autoSlide: 6000,
+        width: 1600,
+        height: 900,
+    });
+
+    Reveal.on('slidechanged', event => {
+        setTimeout(() => initOrResizeChart(event.currentSlide), 100);
+    });
+    Reveal.on('ready', event => {
+        initOrResizeChart(event.currentSlide);
     });
   </script>
 </body>

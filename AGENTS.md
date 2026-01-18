@@ -6,7 +6,7 @@ This document provides guidelines for agents working in this repository.
 
 This is a **Python 3.13+** project called "slide" that generates HTML presentations from stock market data using reveal.js and Bokeh visualizations. The project fetches data from akshare, processes it with pandas, and renders it as reveal.js slides.
 
-**Main entry point**: `bigslide` command (configured in pyproject.toml as `myslide.main:main`)
+**Main entry point**: `main.py` (run with `python main.py` or `uv run python main.py`)
 
 ---
 
@@ -31,19 +31,17 @@ uv run ruff check <file.py>      # Check specific file
 uv run ruff format <file.py>     # Format a single file
 ```
 
-### Type Checking (mypy)
+### Type Checking (basedpyright)
 
 ```bash
-uv run mypy .                    # Type check all files
-uv run mypy <file.py>            # Type check specific file
-uv run mypy --config-file mypy.ini
+uv run basedpyright .                    # Type check all files
+uv run basedpyright <file.py>            # Type check specific file
 ```
 
 ### Running the Application
 
 ```bash
-uv run bigslide                  # Run the main CLI entry point
-uv run python -m myslide.main    # Alternative invocation
+uv run python main.py                  # Run the main entry point
 ```
 
 ### Testing
@@ -109,17 +107,18 @@ uv run pytest -k "test_name"     # Run tests matching pattern
   ) -> None:
   ```
 
-- **Use TypedDict** for structured data:
+- **Use dataclass** for structured data:
   ```python
-  class Slide(TypedDict, total=False):
+  @dataclass
+  class Deck:
       template: str
-      title: str
-      content: Any
+      data: pd.DataFrame | pd.Series
+      title: str | None = None
   ```
 
 - **Generic types** for collections:
   ```python
-  self.slide_datas: list[Slide] = []
+  decks: list[Deck] = []
   ```
 
 ### Naming Conventions
@@ -218,7 +217,7 @@ uv run pytest -k "test_name"     # Run tests matching pattern
 ### File Organization
 
 - **Source files** go in `src/myslide/`
-- **Data processors** go in `src/myslide/data_processor/` as separate modules
+- **Template files** go in `src/myslide/templates/`
 - **Tests** (when added) should go in `tests/` directory at project root
 - **Cache files** stored in `cache/` directory
 - **Output files** stored in `reveal/` directory
@@ -237,4 +236,4 @@ uv run pytest -k "test_name"     # Run tests matching pattern
   cache_dir = Path(__file__).parent.parent.parent / "cache"
   ```
 
-- **Use dataclasses or TypedDict** for structured data rather than dictionaries with magic keys
+- **Use dataclasses** for structured data rather than TypedDict or dictionaries with magic keys

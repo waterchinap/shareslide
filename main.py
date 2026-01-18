@@ -10,7 +10,6 @@ from datetime import datetime
 today = datetime.now().strftime("%Y-%m-%d")
 
 
-
 def main():
     """主函数"""
 
@@ -25,7 +24,6 @@ def main():
     output_src.mkdir(parents=True, exist_ok=True)
     output_file = output_dir / f"{choice}.html"
 
-    
     # prepare data
     processor = DailySlide(df, output_file)
     processor.run()
