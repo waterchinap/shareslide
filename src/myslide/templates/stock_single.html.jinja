@@ -1,0 +1,27 @@
+{% for stock in content %}
+<section>
+  <div class="stock-single-card">
+    <div class="stock-single-header">
+{% set keys = stock.keys() | list %}
+      <span class="stock-name {{ 'positive' if stock.涨跌幅 > 0 else 'negative' if stock.涨跌幅 < 0 else '' }}">{{ stock[keys[0]] }}</span>
+      <span class="stock-change {{ 'positive' if stock.涨跌幅 > 0 else 'negative' if stock.涨跌幅 < 0 else '' }}">{{ stock[keys[1]] }}%</span>
+    </div>
+    <div class="stock-single-metrics">
+{% for i in range(2, keys | length, 2) %}
+      <div class="metric-row-2col">
+        <div class="metric-cell">
+          <span class="metric-cell-label">{{ keys[i] }}</span>
+          <span class="metric-cell-value">{{ stock[keys[i]] }}</span>
+        </div>
+{% if i + 1 < keys | length %}
+        <div class="metric-cell">
+          <span class="metric-cell-label">{{ keys[i + 1] }}</span>
+          <span class="metric-cell-value">{{ stock[keys[i + 1]] }}</span>
+        </div>
+{% endif %}
+      </div>
+{% endfor %}
+    </div>
+  </div>
+</section>
+{% endfor %}

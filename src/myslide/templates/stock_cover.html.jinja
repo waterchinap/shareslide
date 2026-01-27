@@ -1,0 +1,17 @@
+{% macro render_stock_cover(content, title=None) %}
+<section>
+{% if title %}
+  <h2>{{ title }}</h2>
+{% endif %}
+  <div class="stock-cover">
+    <div class="stock-name">{{ content.name }}</div>
+    <div class="stock-code">{{ content.code }}</div>
+    <div class="stock-price">{{ content.price }}</div>
+    <div class="stock-change {% if content.change_pct >= 0 %}positive{% else %}negative{% endif %}">
+      {{ content.change_pct }}%
+    </div>
+  </div>
+</section>
+{% endmacro %}
+
+{{ render_stock_cover(content=content, title=title) }}

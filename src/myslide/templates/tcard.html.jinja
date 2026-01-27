@@ -2,9 +2,8 @@
 {% for col in content.columns %}
 {% set s = content[col] %}
 {% set title = s.name %}
-{% set ncards = 4 %}
 {% set items = s.items()|list %}
-{% for group in items | batch(ncards) %}
+{% for group in items | batch(n) %}
 <section>
   <h3>{{ title }}</h3>
   <div class="slides-container">

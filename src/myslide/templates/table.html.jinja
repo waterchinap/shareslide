@@ -1,11 +1,10 @@
-{% set nrows = 8 %}
 {% set trows = content.shape[0] %}
-{% for i in range(0, trows, nrows) %}
+{% for i in range(0, trows, n) %}
 <section>
   {% if title %}
   <h3>{{ title }}</h3>
   {% endif %}
   {# 使用 safe 过滤器防止HTML被转义 #}
-  {{ content.iloc[i:i+nrows].to_html(classes='dataframe', index=False) | safe }}
+  {{ content.iloc[i:i+n].to_html(classes='dataframe', index=False) | safe }}
 </section>
 {% endfor %}

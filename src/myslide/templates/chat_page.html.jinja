@@ -103,29 +103,7 @@ table.dataframe tbody tr:hover {
   <script src="plugin/notes/notes.js"></script>
   <script src="plugin/markdown/markdown.js"></script>
   <script src="plugin/highlight/highlight.js"></script>
-  <script src="echarts.min.js"></script>
   <script>
-    window.chartOptions = {{ chart_options|safe }};
-
-    const chartInstances = {};
-
-    function initOrResizeChart(slide) {
-        const chartContainers = slide.querySelectorAll('.chart-container');
-        chartContainers.forEach(container => {
-            const chartId = container.id;
-            if (container.offsetWidth > 0) {
-                let chartInstance = chartInstances[chartId];
-                if (!chartInstance) {
-                    chartInstance = echarts.init(container, 'dark');
-                    chartInstances[chartId] = chartInstance;
-                    if (window.chartOptions && window.chartOptions[chartId]) {
-                        chartInstance.setOption(window.chartOptions[chartId]);
-                    }
-                }
-                chartInstance.resize();
-            }
-        });
-    }
 
     Reveal.initialize({
         hash: true,

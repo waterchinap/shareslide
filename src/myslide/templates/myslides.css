@@ -64,3 +64,200 @@ table.dataframe tbody tr:last-of-type {
 table.dataframe tbody tr:hover {
     background-color: #f5f5f5;
 }
+
+.stock-cards-container {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    padding: 20px;
+    justify-content: center;
+}
+
+.stock-card-row {
+    display: contents;
+}
+
+.stock-card {
+    flex: 1;
+    max-width: 700px;
+    background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #404040;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.stock-name {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+.stock-name.positive {
+    color: #e74c3c;
+}
+
+.stock-name.negative {
+    color: #27ae60;
+}
+
+.stock-subheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #404040;
+}
+
+.stock-code {
+    color: #888;
+    font-size: 0.9em;
+}
+
+.stock-change {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.stock-change.positive {
+    color: #e74c3c;
+}
+
+.stock-change.negative {
+    color: #27ae60;
+}
+
+.stock-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+}
+
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+}
+
+.metric-row:last-child {
+    border-bottom: none;
+}
+
+.metric-label {
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+.metric-value {
+    color: #fff;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.metric-value.positive {
+    color: #e74c3c;
+}
+
+.metric-value.negative {
+    color: #27ae60;
+}
+
+.stock-single-card {
+    width: 100%;
+    max-width: none;
+    margin: 0 20px;
+    background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    border-radius: 16px;
+    padding: 30px 40px;
+    border: 1px solid #404040;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stock-single-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #404040;
+}
+
+.stock-name {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.stock-name.positive {
+    color: #e74c3c;
+}
+
+.stock-name.negative {
+    color: #27ae60;
+}
+
+.stock-code {
+    color: #888;
+    font-size: 1.2em;
+}
+
+.stock-change {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.stock-change.positive {
+    color: #e74c3c;
+}
+
+.stock-change.negative {
+    color: #27ae60;
+}
+
+.stock-single-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.metric-row-2col {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.metric-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.metric-cell-label {
+    color: #aaa;
+    font-size: 1.2em;
+}
+
+.metric-cell-value {
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.metric-cell-value.positive {
+    color: #e74c3c;
+}
+
+.metric-cell-value.negative {
+    color: #27ae60;
+}

@@ -1,0 +1,29 @@
+{%- macro render_stock_card(content, title=None) -%}
+{%- set cols = content[0].keys() -%}
+{%- for group in content|batch(2) -%}
+<section>
+  <div class="stock-cards-container">
+{%- for row in group -%}
+    <div class="stock-card">
+      <div class="stock-header">
+        <span class="stock-name {{ 'positive' if row.涨跌幅 > 0 else 'negative' if row.涨跌幅 < 0 else '' }}">{{ row.名称 }}</span>
+        <span class="stock-change {{ 'positive' if row.涨跌幅 > 0 else 'negative' if row.涨跌幅 < 0 else '' }}">{{ "%.2f"|format(row.涨跌幅) }}%</span>
+      </div>
+      <div class="stock-metrics">
+{%- for col in cols -%}
+{%- if col not in ["名称", "涨跌幅"] -%}
+        <div class="metric-row">
+          <span class="metric-label">{{ col }}</span>
+          <span class="metric-value">{{ row[col] }}</span>
+        </div>
+{%- endif -%}
+{%- endfor -%}
+      </div>
+    </div>
+{%- endfor -%}
+  </div>
+</section>
+{%- endfor -%}
+{%- endmacro -%}
+
+{{- render_stock_card(content=content, title=title) -}}
