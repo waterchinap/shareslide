@@ -1,5 +1,6 @@
 from myslide.data_fetch import DataFetcher
 from myslide.daily_slide import DailySlide
+from myslide.stock_slide import StockSlide
 from pathlib import Path
 from loguru import logger
 import sys
@@ -9,14 +10,13 @@ from datetime import datetime
 
 today = datetime.now().strftime("%Y-%m-%d")
 
+MY_CODES = ["300750", "600674", "600941", "600309", "002415", "688234", "601398"]
 
-def main():
-    """主函数"""
 
-    # fetch data
+def run_daily_slide():
+    """运行全市场数据幻灯片"""
     choice, df = DataFetcher.fetch_data()
 
-    # setup
     cache_dir = Path.cwd() / "cache"
     cache_dir.mkdir(parents=True, exist_ok=True)
     output_dir = Path.cwd() / "reveal"
@@ -24,9 +24,38 @@ def main():
     output_src.mkdir(parents=True, exist_ok=True)
     output_file = output_dir / f"{choice}.html"
 
-    # prepare data
     processor = DailySlide(df, output_file)
     processor.run()
+
+
+def run_stock_slide():
+    """运行个股展示幻灯片"""
+    choice, df = DataFetcher.fetch_data()
+
+    cache_dir = Path.cwd() / "cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = Path.cwd() / "reveal"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_file = output_dir / "stock.html"
+
+    processor = StockSlide(MY_CODES, df, output_file)
+    processor.run()
+
+
+def main():
+    page_list = ["全市场数据幻灯片", "个股展示幻灯片"]
+    for i, page in enumerate(page_list):
+        print(f"{i}. {page}")
+
+    choice = int(input("请选择功能："))
+
+    if choice >= len(page_list):
+        raise ValueError("Invalid choice")
+
+    if choice == 0:
+        run_daily_slide()
+    elif choice == 1:
+        run_stock_slide()
 
 
 if __name__ == "__main__":

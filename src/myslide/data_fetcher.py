@@ -102,8 +102,8 @@ class Cn399317(DataLoader):
 
 def main():
     """主函数"""
-    test = Cn399317()
-    test.clean('cn399317')
+    test = SpotEm()
+    test.clean('spot_em')
     # print(cn317.df.head())    
 
 if __name__ == "__main__":
