@@ -13,6 +13,7 @@ CACHE_DIR = Path(__file__).parent.parent.parent / 'cache'
 DATA_URL = {
     'spot_em': ak.stock_zh_a_spot_em,
     'sse_daily': ak.stock_sse_summary,
+    'news_em':ak.stock_info_global_em,
     'cn399317' : 
 f"https://www.cnindex.com.cn/sample-detail/download-history?indexcode=399317"}
 
@@ -29,6 +30,30 @@ headers = {
     "Upgrade-Insecure-Requests": "1",
 }
 
+class NewsEm(DataLoader):
+        
+    def fetch(self, url:str) -> pd.DataFrame:
+        cache_file = CACHE_DIR / f"{TODAY}news_em.csv"
+        if cache_file.exists():
+            logger.info(f"Cache file exists: {cache_file}")
+            df = pd.read_csv(cache_file)
+            return df
+        try:
+            df = DATA_URL[url]()
+            logger.info(f"spot_em data fetched successfully: {df.shape}")
+            CACHE_DIR.mkdir(parents=True, exist_ok=True)
+            df.to_csv(cache_file, index=False)
+            return df
+        except Exception as e:
+            logger.error(f"Failed to fetch data: {e}")
+            raise
+
+    def clean(self, url:str):
+        df = self.fetch(url)
+        sel = df[['标题','摘要','发布时间']]
+        return sel
+    
+    
 class SpotEm(DataLoader):
         
     def fetch(self, url:str) -> pd.DataFrame:

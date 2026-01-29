@@ -33,7 +33,7 @@ class Cn399317Builder:
         return {
             'backgroundColor': '',
           'xAxis': {
-            'type': 'time',
+            'type': 'category',
             'data': x,
             'axisLabel': {
                 'fontSize': 18
@@ -88,7 +88,7 @@ class Cn399317Builder:
         return decks
 
     def last_year_rank(self, df:pd.DataFrame,title_sufix:str) -> Deck:
-        s = df.iloc[0].sort_values(ascending=True)
+        s = df.iloc[0].sort_values(ascending=False)
         option = self.hbar_plot(s.tolist(), s.index.tolist())
         title = f'{df.index[0]}{title_sufix}'
         self.chart_options[title]= option
@@ -109,7 +109,7 @@ class Cn399317Builder:
 
     def list_count(self, df:pd.DataFrame)  -> list[Deck]:
         s_count = df.groupby('日期')['代码'].count()
-        logger.info(s_count.head())
+        # logger.info(s_count.head())
         s_diff = s_count.diff()[1:]
         options = [self.base_plot(s.index.tolist(), s.tolist(), 'bar') for s in [s_count, s_diff]]
         titles = ['上市股票总数', '新增上市股票']

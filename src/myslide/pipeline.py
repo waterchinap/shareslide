@@ -1,6 +1,7 @@
 from myslide.cn399317_builder import Cn399317Builder
-from myslide.data_fetcher import Cn399317, SpotEm
+from myslide.data_fetcher import Cn399317, NewsEm, SpotEm
 from myslide.interfaces import DataLoader, SlidesBuilder, Render
+from myslide.news_builder import NewsBuilder
 from myslide.slide_render import SlideRender
 from myslide.spot_em import SpotEmBuilder
 from loguru import logger
@@ -38,5 +39,13 @@ def cn399317():
     )
     pipe.run('cn399317', 'cn399317')
 
+@app.command()
+def newsem():
+    pipe = SlidePipeline(
+        loader=NewsEm(),
+        decks_builder=NewsBuilder(),
+        render=SlideRender()
+    )
+    pipe.run('news_em', 'news_em')
 if __name__ == '__main__':
     app()
