@@ -1,7 +1,8 @@
+from myslide.scraper import NewsImageScraper
 from myslide.cn399317_builder import Cn399317Builder
 from myslide.data_fetcher import Cn399317, NewsEm, SpotEm
 from myslide.interfaces import DataLoader, SlidesBuilder, Render
-from myslide.news_builder import NewsBuilder
+from myslide.news_builder import ImgNewsBuilder, NewsBuilder
 from myslide.slide_render import SlideRender
 from myslide.spot_em import SpotEmBuilder
 from loguru import logger
@@ -47,5 +48,16 @@ def newsem():
         render=SlideRender()
     )
     pipe.run('news_em', 'news_em')
+
+
+@app.command()
+def imgnews():
+    pipe = SlidePipeline(
+        loader=NewsImageScraper(),
+        decks_builder=ImgNewsBuilder(),
+        render=SlideRender()
+    )
+    pipe.run('cn_news', 'cn_news')
+    
 if __name__ == '__main__':
     app()

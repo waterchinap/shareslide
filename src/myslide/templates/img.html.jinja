@@ -1,7 +1,4 @@
-{# 一张图片一页 #}
-{% for title, url  in decks %}
-<section data-background-image="{{ url }}" data-background-size="contain">
-  <h4>{{ title }}</h4>
-  {# <img class="r-stretch" src="{{ url }}" alt=""> #}
+<section  style="display: flex; flex-direction: column; height: 100vh; " data-background-image="{{content}}" data-background-size="contain">
+  <h4 style="background-color: rgba(0,0,0,0.4); border-radius: 10%;">{{ title }}</h4>
+  <div style="flex: 1;"> </div>
 </section>
-{% endfor %}

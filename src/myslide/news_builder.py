@@ -15,3 +15,12 @@ class NewsBuilder(SlidesBuilder):
         ]
         return (decks, '{}')
     
+class ImgNewsBuilder(SlidesBuilder):
+
+    def builder(self, df:pd.DataFrame) -> tuple[list[Deck], str]:
+        logger.info(df.columns)
+        decks = [
+            Deck('img', t[2], t[3]) for t in df.itertuples()
+        ]
+        return (decks, '{}')
+    
