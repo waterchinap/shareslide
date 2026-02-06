@@ -7,6 +7,9 @@ requires-python = ">=3.13.7"
 dependencies = [
     "akshare>=1.17.50",
     "chromedriver-binary>=142.0.7416.0.0",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.32.0",
+    "pydantic-settings>=2.6.1",
     "ipython>=9.5.0",
     "jedi>=0.19.2",
     "jinja2>=3.1.6",
@@ -20,6 +23,10 @@ dependencies = [
     "selenium>=4.35.0",
     "tk>=0.1.0",
     "typer>=0.17.4",
+    "matplotlib>=3.10.8",
+    "baostock>=0.8.9",
+    "pyecharts>=2.0.9",
+    "tenacity>=9.1.3",
 ]
 
 [[tool.uv.index]]
@@ -29,10 +36,10 @@ default = true
 # 在 pyproject.toml 中
 [project.scripts]
 bigslide = "myslide.main:main"
+shareslide-api = "run_api:main"
 
 [tool.basedpyright]
 typeCheckingMode = "basic"
 reportUnknownMemberType = "none"
-reportAny = "none"
 reportUnusedCallResult = "none"
 reportImplicitStringConcatenation = "none"

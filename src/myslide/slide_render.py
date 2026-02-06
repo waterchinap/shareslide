@@ -3,8 +3,7 @@ from loguru import logger
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 
-from myslide.models import Deck
-from myslide.interfaces import Render
+from myslide.models import Deck, Render
 
 TODAY = datetime.now().strftime("%Y-%m-%d")
 TEMPLATE_DIR = Path(__file__).parent / "templates"
@@ -25,12 +24,12 @@ class SlideRender(Render):
         deck_html = "\n".join([self.render_a_deck(deck) for deck in decks])
         return deck_html
 
-    def render_page(self, decks: list[Deck], fn: str, chart_optiions: str ='{}') -> None:
+    def render_page(self, decks: list[Deck], fn: str, chart_options: str ='{}') -> None:
         
         decks_html = self.render_decks(decks)
         logger.info("decks all ready.")
         page_render = self.env.get_template("page.html.jinja").render
-        page_html = page_render(sections = decks_html, chart_options=chart_optiions)
+        page_html = page_render(sections = decks_html, chart_options=chart_options)
         output = self.reveal_dir / f'{fn}.html'
 
         with open(output, "w") as file:

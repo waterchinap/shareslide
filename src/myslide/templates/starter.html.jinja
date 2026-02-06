@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>优化版外部HTML页面轮播</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    .carousel-container {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      position: relative;
+    }
+
+    /* 单个iframe容器 */
+    .iframe-wrapper {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* 单个iframe样式 */
+    .carousel-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    /* 激活的iframe可见 */
+    .carousel-iframe.active {
+      opacity: 1;
+    }
+
+    /* 预加载指示器（可选） */
+    .loading-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 20px;
+      z-index: 100;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="carousel-container">
+    <!-- 单个iframe用于轮播显示 -->
+    <div class="iframe-wrapper">
+      <iframe class="carousel-iframe active" id="main-iframe" scrolling="no" frameborder="0"></iframe>
+    </div>
+    
+    <!-- 加载指示器 -->
+    <div class="loading-indicator" id="loading">加载中...</div>
+  </div>
+
+  <script>
+    class SingleIframeCarousel {
+      constructor(pages) {
+        this.iframe = document.getElementById('main-iframe');
+        this.loadingIndicator = document.getElementById('loading');
+        this.currentIndex = 0;
+        this.intervalId = null;
+        this.isLoading = false;
+        this.pages = pages || []
+        
+        this.init();
+      }
+
+      init() {
+        // 加载第一个页面
+        this.loadPage(this.currentIndex);
+        
+        // 设置事件监听
+        this.setupEventListeners();
+        
+        console.log('单iframe轮播初始化完成，总页面数:', this.pages.length);
+      }
+      
+      setupEventListeners() {
+        const container = document.querySelector('.carousel-container');
+        
+        // 鼠标悬停暂停
+        container.addEventListener('mouseenter', () => {
+          console.log('鼠标悬停，暂停轮播');
+          this.stopAutoPlay();
+        });
+        
+        // 鼠标移出恢复
+        container.addEventListener('mouseleave', () => {
+          console.log('鼠标移出，恢复轮播');
+          this.startAutoPlay();
+        });
+        
+        // 监听iframe加载事件
+        this.iframe.addEventListener('load', () => {
+          console.log(`页面 ${this.currentIndex + 1} 加载完成`);
+          this.hideLoading();
+          this.isLoading = false;
+          
+          // 页面加载完成后开始计时
+          this.startAutoPlay();
+        });
+        
+        this.iframe.addEventListener('error', (e) => {
+          console.error(`页面 ${this.currentIndex + 1} 加载失败:`, this.pages[this.currentIndex].src);
+          this.hideLoading();
+          this.isLoading = false;
+          
+          // 加载失败时也继续轮播
+          this.nextPage();
+        });
+      }
+      
+      loadPage(index) {
+        if (this.isLoading || index < 0 || index >= this.pages.length) {
+          return;
+        }
+        
+        this.isLoading = true;
+        this.currentIndex = index;
+        const page = this.pages[index];
+        
+        console.log(`开始加载页面 ${index + 1}: ${page.src}, 持续时间: ${page.duration}ms`);
+        
+        // 显示加载指示器
+        this.showLoading();
+        
+        // 淡出当前页面
+        this.iframe.classList.remove('active');
+        
+        // 短暂延迟后加载新页面
+        setTimeout(() => {
+          this.iframe.src = page.src;
+          
+          // 页面加载后淡入
+          setTimeout(() => {
+            this.iframe.classList.add('active');
+          }, 100);
+          
+        }, 300);
+      }
+      
+      showLoading() {
+        if (this.loadingIndicator) {
+          this.loadingIndicator.style.display = 'block';
+        }
+      }
+      
+      hideLoading() {
+        if (this.loadingIndicator) {
+          this.loadingIndicator.style.display = 'none';
+        }
+      }
+      
+      nextPage() {
+        this.stopAutoPlay();
+        
+        const nextIndex = (this.currentIndex + 1) % this.pages.length;
+        console.log(`切换到下一个页面: ${nextIndex + 1}`);
+        this.loadPage(nextIndex);
+      }
+      
+      getCurrentPageDuration() {
+        if (this.currentIndex >= 0 && this.currentIndex < this.pages.length) {
+          return this.pages[this.currentIndex].duration;
+        }
+        return 10000; // 默认10秒
+      }
+      
+      startAutoPlay() {
+        this.stopAutoPlay(); // 先清除现有定时器
+        
+        if (this.isLoading) {
+          return; // 正在加载时不启动定时器
+        }
+        
+        const duration = this.getCurrentPageDuration();
+        console.log(`开始自动轮播，当前页面显示: ${duration}ms`);
+        
+        this.intervalId = setTimeout(() => {
+          this.nextPage();
+        }, duration);
+      }
+      
+      stopAutoPlay() {
+        if (this.intervalId) {
+          clearTimeout(this.intervalId);
+          this.intervalId = null;
+        }
+      }
+      
+      // 手动切换到指定页面
+      goToPage(index) {
+        if (index >= 0 && index < this.pages.length && index !== this.currentIndex) {
+          console.log(`手动切换到页面: ${index + 1}`);
+          this.stopAutoPlay();
+          this.loadPage(index);
+        }
+      }
+    }
+
+    const pageConfigs = {{ pages|tojson|safe }}
+
+    // 初始化轮播
+    window.addEventListener('DOMContentLoaded', () => {
+      window.carousel = new SingleIframeCarousel(pageConfigs);
+      
+      // 可选：添加键盘控制
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+          const prevIndex = (window.carousel.currentIndex - 1 + window.carousel.pages.length) % window.carousel.pages.length;
+          window.carousel.goToPage(prevIndex);
+        } else if (e.key === 'ArrowRight') {
+          const nextIndex = (window.carousel.currentIndex + 1) % window.carousel.pages.length;
+          window.carousel.goToPage(nextIndex);
+        } else if (e.key === ' ') {
+          // 空格键暂停/继续
+          if (window.carousel.intervalId) {
+            window.carousel.stopAutoPlay();
+            console.log('手动暂停');
+          } else {
+            window.carousel.startAutoPlay();
+            console.log('手动继续');
+          }
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
